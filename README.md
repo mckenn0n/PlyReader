@@ -1,2 +1,2 @@
 # PlyReader
-A simple parser for stanford polygon format files, and a program to render them in opengl with python.
+A simple parser and renderer for stanford polygon format files to render in opengl with python.
