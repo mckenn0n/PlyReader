@@ -31,12 +31,6 @@ class Parse():
 		num_of_vertex = header[element_vertex_number_index].split(" ")
 		num_of_vertex = np.int32(num_of_vertex[2])
 
-		element_face_number_index = [i for i,val in enumerate(header) if val.startswith('element face ')]
-		element_face_number_index = element_face_number_index[0]
-		num_of_face = header[element_face_number_index].split(" ")
-		num_of_face = np.int32(num_of_face[2])
-
-
 		body = data[end_header_index+1:]
-		vert_list = body[0:num_of_vertex+1]
-		face_list = body[num_of_vertex+1:]
+		vert_list = body[0:num_of_vertex]
+		face_list = body[num_of_vertex:]
