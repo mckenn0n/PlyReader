@@ -11,7 +11,7 @@ class Parse():
 
 
 	def parse(self):
-		file_object  = open('models/'+self.name, 'r')
+		file_object  = open('../models/'+self.name, 'r')
 		data = file_object.read()
 		file_object.close()
 		data = data.split("\n")
@@ -40,3 +40,8 @@ class Parse():
 
 		self.face_list = body[num_of_vertex:]
 		self.face_list = [x for x in self.face_list if x != '']
+
+
+jim = Parse("model0.ply")
+jim.parse()
+print(jim.name,'\n\n\n\n', jim.header,'\n\n\n\n', jim.vert_list, '\n', len(jim.vert_list), '\n\n\n\n', jim.face_list,'\n',len(jim.face_list))
