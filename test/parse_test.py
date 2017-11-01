@@ -36,10 +36,16 @@ class Parse():
 
 		body = data[end_header_index+1:]
 		self.vert_list = body[0:num_of_vertex]
+		for x in range(len(self.vert_list)):
+			self.vert_list[x] = self.vert_list[x].split(" ")
+			self.vert_list[x] = np.float32(self.vert_list[x])
 		self.vert_list = [x for x in self.vert_list if x != '']
 
 		self.face_list = body[num_of_vertex:]
 		self.face_list = [x for x in self.face_list if x != '']
+		for x in range(len(self.face_list)):
+			self.face_list[x] = self.face_list[x].split(' ')
+			self.face_list[x] = np.int32(self.face_list[x])
 
 
 jim = Parse("model0.ply")
