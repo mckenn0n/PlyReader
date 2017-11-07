@@ -1,6 +1,5 @@
 #from __future__ import division
 import numpy as np
-import re
 
 class Parse():
 	def __init__(self,name):
@@ -36,13 +35,3 @@ class Parse():
 		for x in range(len(self.face_list)):
 			self.face_list[x] = self.face_list[x].split(' ')
 			self.face_list[x] = np.int32(self.face_list[x])
-
-
-class Render():
-	def __init__(self, model_name):
-		self.model_name = model_name
-		self.info = Parse(model_name)
-
-	def render(self):
-		vert_list = self.info.vert_list
-		face_list = self.info.face_list

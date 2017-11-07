@@ -1,34 +1,34 @@
-from ply_renderer import Parse as p
-from ply_renderer import Render as r
+from Parse import Parse as p
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame
+import sys
 
 
-test = p("model0.ply")
+test = p(sys.argv[1])
 test.parse()
 vl = test.vert_list
 fl = test.face_list
-print('vl ',len(vl), vl[0])
-print('fl ',len(fl), fl[0])
-# print('test ', vl[2][fl[2][3]])
 class GLContext():
 	def __init__(self, screen):
 		self.rot = 0
+		self.lines = False
 		glEnable(GL_LIGHTING)
 		glEnable(GL_LIGHT0)
-		mat_specular = [ 0.2, 0.2, 0.0, 1.0 ] #color of specular highlights
-		mat_diffuse =[ .1, 0.0, 0.0, 1.0 ] #color of diffuse shading
-		mat_ambient= [ .1, .1, .1, 1.0 ] #color of ambient light
-		mat_shininess = [ 0.2 ] #the "shininess" of the specular highlight
+		mat_specular = [ 0.3, 0.5, 0.2, 1.0 ] 
+		mat_diffuse =[ .1, 0.0, 0.0, 1.0 ] 
+		mat_ambient= [ .1, .1, .1, 1.0 ]
+		mat_shininess = [ 0.5 ]
 
-		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse)
-		glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient)
-		glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+		glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE)
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular)
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse)
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat_ambient)
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess)
+
 		glEnable(GL_DEPTH_TEST)
 		glDepthFunc(GL_LEQUAL)
-		light_position = [ 1.0, 2.0, -7.0, 1.0 ]
+		light_position = [ 1.0, 1.0, -5.0, 1.0 ]
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position)
 		glShadeModel(GL_SMOOTH)
 		self.screen=screen
@@ -44,20 +44,21 @@ class GLContext():
  		for event in pygame.event.get():
  			if event.type == pygame.QUIT:
  				exit()
- 				if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
- 					exit()
+ 			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
+ 				exit()
+ 			if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+ 				self.lines = not self.lines
  		return
 
 
 	def display(self):
-
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 		glPushMatrix()
-		glTranslatef(0.0, 0.0, -5.0) 
-		glRotatef(45.0, 1, 0, 0)  
+		glTranslatef(0.0, -1.0, -5.0) 
+		glRotatef(0.0, 1, 0, 0)  
 		glRotatef(self.rot, 0, 1, 0) 
 		glRotatef(0.0, 0, 0, 1) 
-		
+		glEnable(GL_LIGHTING)
 		glBegin(GL_TRIANGLES)
 		
 		glColor3f(1.0, 0.0, 1.0)
@@ -72,8 +73,23 @@ class GLContext():
 
 
 		glEnd()
+		
+		if self.lines:
+			glColor3f(1.0, 1.0, 1.0)
+			for x in range(len(fl)): #x starts at 0
+				glDisable(GL_LIGHTING)
+				glBegin(GL_LINE_LOOP)
+				glVertex3f(vl[fl[x][1]][0], vl[fl[x][1]][1], vl[fl[x][1]][2])
+				glVertex3f(vl[fl[x][2]][0], vl[fl[x][2]][1], vl[fl[x][2]][2])
+				glVertex3f(vl[fl[x][3]][0], vl[fl[x][3]][1], vl[fl[x][3]][2])
+				glEnd()
+
+
+		
 		glPopMatrix()
 		return
+
+
 def main():
 	pygame.init() 
 	screen = pygame.display.set_mode((600,600), pygame.OPENGL|pygame.DOUBLEBUF) 
