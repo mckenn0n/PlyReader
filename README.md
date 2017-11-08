@@ -21,4 +21,16 @@ Quit:
 
 Click the x or press ESC.
 
+Rotation:
 
+By default the model will rotate around the x-axis. Pressing p, UP_ARROW, DOWN_ARROW, RIGHT_ARROW, or LEFT_ARROW changes this behavior.
+
+p - Pressing p will stop and start any auto rotation.
+
+UP_ARROW - Holding this key will rotate the model about the y-axis. The model will appear to rotate upwards.
+
+DOWN_ARROW - Holding this key will rotate the model about the y-axis. The model will appear to rotate down.
+
+RIGHT_ARROW - Holding this key will rotate the model about the x-axis. The model will appear to rotate to the right.
+
+LEFT_ARROW - Holding this key will rotate the model about the x-axis. The model will appear to rotate to the left.
