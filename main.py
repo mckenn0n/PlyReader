@@ -59,11 +59,11 @@ class GLContext():
 		keys = pygame.key.get_pressed()
 		if keys[pygame.K_UP]:
 			self.rot_x -= 2
-		elif keys[pygame.K_DOWN]:
+		if keys[pygame.K_DOWN]:
 			self.rot_x += 2
-		elif keys[pygame.K_LEFT]:
+		if keys[pygame.K_LEFT]:
 			self.rot_y -= 2
-		elif keys[pygame.K_RIGHT]:
+		if keys[pygame.K_RIGHT]:
 			self.rot_y += 2
 		else:
 			if not self.pause:
