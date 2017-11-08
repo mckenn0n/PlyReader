@@ -11,8 +11,10 @@ vl = test.vert_list
 fl = test.face_list
 class GLContext():
 	def __init__(self, screen):
-		self.rot = 0
+		self.rot_x = 0
+		self.rot_y = 0
 		self.lines = False
+		self.pause = False
 		glEnable(GL_LIGHTING)
 		glEnable(GL_LIGHT0)
 		mat_specular = [ 0.3, 0.5, 0.2, 1.0 ] 
@@ -41,28 +43,44 @@ class GLContext():
 
 	
 	def check_events(self):
- 		for event in pygame.event.get():
- 			if event.type == pygame.QUIT:
- 				exit()
- 			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
- 				exit()
- 			if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
- 				self.lines = not self.lines
- 		return
+		
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				exit()
+			if event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE:
+				exit()
+			if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
+				self.lines = not self.lines
+			if event.type == pygame.KEYUP and event.key == pygame.K_p:
+				self.pause = not self.pause
+		return
 
+	def moving(self):
+		keys = pygame.key.get_pressed()
+		if keys[pygame.K_UP]:
+			self.rot_x -= 2
+		elif keys[pygame.K_DOWN]:
+			self.rot_x += 2
+		elif keys[pygame.K_LEFT]:
+			self.rot_y -= 2
+		elif keys[pygame.K_RIGHT]:
+			self.rot_y += 2
+		else:
+			if not self.pause:
+				self.rot_y += 1
+		return
 
 	def display(self):
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 		glPushMatrix()
 		glTranslatef(0.0, -1.0, -5.0) 
-		glRotatef(0.0, 1, 0, 0)  
-		glRotatef(self.rot, 0, 1, 0) 
+		glRotatef(self.rot_x, 1, 0, 0)  
+		glRotatef(self.rot_y, 0, 1, 0) 
 		glRotatef(0.0, 0, 0, 1) 
 		glEnable(GL_LIGHTING)
 		glBegin(GL_TRIANGLES)
 		
 		glColor3f(1.0, 0.0, 1.0)
-		self.rot += 1.0
 		for x in range(len(fl)): #x starts at 0
 			glNormal3f(vl[fl[x][1]][3], vl[fl[x][1]][4], vl[fl[x][1]][5])
 			glVertex3f(vl[fl[x][1]][0], vl[fl[x][1]][1], vl[fl[x][1]][2])
@@ -84,9 +102,8 @@ class GLContext():
 				glVertex3f(vl[fl[x][3]][0], vl[fl[x][3]][1], vl[fl[x][3]][2])
 				glEnd()
 
-
-		
 		glPopMatrix()
+		self.moving()
 		return
 
 
